@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+     <style media="screen">
+     	
+      table,tr,td{
+        border:1px solid #000;
+      }
+      td{
+        width: 18px;
+        height: 18px;
+      }
+      .red{
+        background-color: gold;
+      }
+      .fold{
+        background-color: red;
+      }
+      #box{width: 100px;height: 50px;border: 1px solid black;float: left;position: absolute;left: 500px;top: 3px;text-align: center;line-height: 50px;}
+    </style>
+
+	</head>
+	<body>
+		<table id="table">
+			
+		</table>
+		<div id="box">
+			分数：0
+		</div>
+		<script type="text/javascript">
+			var box=document.getElementById("box")
+			var table=document.getElementById("table");
+			var m=20;
+			var tds=[]
+			    for (var i=0;i<m;i++) {
+					var tr=document.createElement("tr");
+					var num=[];
+					for (var j=0;j<m;j++) {
+						//创建td
+					var td=document.createElement("td")
+						tr.appendChild(td);
+						num.push(td);
+						
+					}
+					table.appendChild(tr);
+					tds.push(num);
+				}
+			function Snake(){
+				//给蛇的位置取随机数
+				var c=parseInt(Math.random()*16)
+				var b=parseInt(Math.random()*16)
+				this.bodyArr=[
+			
+				{x:b,y:c},
+				{x:b+1,y:c},
+				{x:b+2,y:c},
+				{x:b+3,y:c},]
+				this.render();
+				          this.bingEvent();
+          this.direction = "right";
+			}
+          var t=0;
+			Snake.prototype.render=function(){
+				for(var i=0; i<m ; i++){
+					for(var j=0; j<m ; j++){
+            //清空所有的格子
+					tds[i][j].className="";
+				}
+				}//渲染一条蛇
+				for(var l=0;l<this.bodyArr.length;l++){
+				tds[this.bodyArr[l].x][this.bodyArr[l].y].className="red"
+               if(food.xx==(this.bodyArr[l].x)&&food.yy==(this.bodyArr[l].y)){
+              this.add();
+              food.change();
+              console.log(t)
+              t+=10;
+              box.innerHTML="分数："+t
+              }
+				}
+             }
+			
+
+			Snake.prototype.move=function(){
+				this.bodyArr.pop();//删除尾巴
+//				this.bodyArr.unshift({
+//				x : this.bodyArr[0].x,
+//				y : this.bodyArr[0].y+1
+//				})}
+          		this.add();//添加头部
+          
+      }
+			
+				//蛇不能往后跑
+		   Snake.prototype.bingEvent = function(){
+          var self = this;
+          document.onkeydown = function(event){
+              event = event || window.event;
+              switch (event.keyCode) {
+                case 37:
+                    if (self.direction == "right") {//按左时监测射的方向看看是不是右负责不执行
+                        return;
+                    }
+                    self.direction = "left";
+                  break;
+                case 38:
+                    if (self.direction == "down") {//按上时监测是不是下否则返回
+                        return;
+                    }
+                    self.direction = "up";
+                  break;
+                case 39:
+                    if (self.direction == "left") {
+                        return;
+                    }
+                    self.direction = "right";
+                  break;
+                case 40:
+                    if (self.direction == "up") {
+                        return;
+                    }
+                    self.direction = "down";
+                  break;
+                default:
+
+              }
+
+          }
+      }
+		   
+		 Snake.prototype.group=function(){
+		 	this.add;
+		 }
+		   
+		   Snake.prototype.add=function(){
+//				this.bodyArr.pop();//删除尾巴
+//				this.bodyArr.unshift({
+//				x : this.bodyArr[0].x,
+//				y : this.bodyArr[0].y+1
+//				})}
+           //添加头部
+          switch (this.direction) {
+            case "right":
+                this.bodyArr.unshift({
+                  x : this.bodyArr[0].x,
+                  y : this.bodyArr[0].y+1
+                })
+
+              break;
+            case "up":
+                this.bodyArr.unshift({
+                  x : this.bodyArr[0].x -1,
+                  y : this.bodyArr[0].y
+                })
+
+              break;
+            case "down":
+                this.bodyArr.unshift({
+                  x : this.bodyArr[0].x +1,
+                  y : this.bodyArr[0].y
+                })
+
+              break;
+            case "left":
+                this.bodyArr.unshift({
+                  x : this.bodyArr[0].x,
+                  y : this.bodyArr[0].y - 1
+                })
+
+              break;
+            default:
+
+          }
+      }
+		   //食物
+		   function Food(){
+		   	this.x=null;
+		   	this.y=null;
+		   	this.change();
+		   }
+		   //食物取随机数
+		   Food.prototype.change=function(){
+				this.xx=parseInt(Math.random()*20  )
+				this.yy=parseInt(Math.random()*20  )
+//				for(var b=0;b<snake.bodyArr.length;b++){
+//					if(this.xx==snake.bodyArr[b].x && this.yy==snake.bodyArr[b].y){
+//				this.render();
+//					}
+//				}
+
+			}
+			Food.prototype.render=function(){
+				syn=this;
+			tds[this.xx][this.yy].className="fold";
+//			alert(1)
+			}
+		var food =new Food(); 
+        var snake = new Snake();
+          var tim = setInterval(function(){
+          	if(snake.bodyArr[0].x<1){snake.bodyArr[0].x=18}//撞到墙穿越
+          	if(snake.bodyArr[0].x>18){snake.bodyArr[0].x=0}          	
+          	if(snake.bodyArr[0].y<1){snake.bodyArr[0].y=18}
+          	if(snake.bodyArr[0].y>18){snake.bodyArr[0].y=0}
+//        	console.log(snake.bodyArr[1].y+"-"+snake.bodyArr[1].x)
+          	for (var i=1;i<snake.bodyArr.length;i++){//撞到自己死掉
+                if(snake.bodyArr[i].y==snake.bodyArr[0].y&&snake.bodyArr[i].x==snake.bodyArr[0].x)
+          		{alert("游戏结束你的分数是："+t);
+          		clearInterval(tim);
+          		}
+          	}
+              snake.move();
+              snake.render();
+              food.render();}
+          ,100)
+  
+		</script>
+	</body>
+</html>
